@@ -1,0 +1,58 @@
+version: "3.8"
+volumes:
+  shared-workspace:
+    name: "hadoop-distributed-file-system"
+    driver: local
+services:
+    jupyterlab:
+        image: spark-jupyter
+        container_name: spark-jupyter
+        ports:
+          - 8888:8888
+        volumes:
+          - shared-workspace:/opt/workspace
+        networks:
+          - kafka_spark_subnet
+        env_file:
+          - jupyter\environment\notebooks_environment.env
+    spark-master:
+        image: spark-master
+        container_name: spark-master
+        ports:
+          - 8080:8080
+          - 7077:7077
+        volumes:
+          - shared-workspace:/opt/workspace
+        networks:
+          - kafka_spark_subnet
+    spark-worker-1:
+        image: spark-worker
+        container_name: spark-worker-1
+        environment:
+          - SPARK_WORKER_CORES=1
+          - SPARK_WORKER_MEMORY=1g
+        ports:
+          - 8081:8081
+        volumes:
+          - shared-workspace:/opt/workspace
+        depends_on:
+          - spark-master
+        networks:
+          - kafka_spark_subnet
+    spark-worker-2:
+        image: spark-worker
+        container_name: spark-worker-2
+        environment:
+          - SPARK_WORKER_CORES=1
+          - SPARK_WORKER_MEMORY=1g
+        ports:
+          - 8082:8081
+        volumes:
+          - shared-workspace:/opt/workspace
+        depends_on:
+          - spark-master
+        networks:
+          - kafka_spark_subnet
+networks:
+  kafka_spark_subnet:
+    external: true

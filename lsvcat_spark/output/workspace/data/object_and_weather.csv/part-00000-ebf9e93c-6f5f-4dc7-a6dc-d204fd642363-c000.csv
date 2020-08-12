@@ -1,0 +1,2 @@
+timestamp,location,person_no,car_no,motorcycle_no,bus_no,truck_no,temp,temp_feels_like,temp_min,temp_max,pressure,humidity,visibility,wind_speed,wind_deg
+1597059182,Times Square,3,5,0,0,0,31.05,34.98,29,32.78,1018,62,10000,1.8,250
